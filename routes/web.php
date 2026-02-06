@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth; // <--- Añadido por seguridad
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TareaController;
 use App\Http\Controllers\CategoriaController;  // añado categoria controlers
+use App\Http\Controllers\ComentarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tareas/favoritas', [TareaController::class, 'favoritas'])->name('tareas.favoritas');// tiene que ir antes que show
 
     Route::post('/puntos/recargar', [TareaController::class, 'recargarPuntos'])->name('puntos.recargar');
+    //ruta para comentarios
+    Route::post('/tareas/{id}/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+
+    // ruta email
+    Route::post('/tareas/{id}/compartir', [App\Http\Controllers\TareaController::class, 'enviarPorEmail'])->name('tareas.enviar.email');
+
+    
 
 
 

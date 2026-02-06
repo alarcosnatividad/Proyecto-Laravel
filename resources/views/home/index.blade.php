@@ -55,9 +55,10 @@
                     <h5 class="card-title fw-bold">{{ $categoria->nombre }}</h5>
                     
                     <div class="mt-auto d-grid gap-2">
-                        <a href="{{ route('tareas.por_categoria', $categoria->id) }}" class="btn btn-primary">
-                            Ver Tareas
-                        </a>
+                        <a href="{{ route('tareas.index', ['categoria_id' => $categoria->id]) }}" class="btn btn-primary">
+                          Ver Tareas
+                            </a>
+                         
 
                         {{-- ACCIONES DE ADMINISTRADOR: EDITAR Y BORRAR --}}
                         @if(Auth::check() && Auth::user()->role == 'admin')

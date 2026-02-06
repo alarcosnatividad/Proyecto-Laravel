@@ -22,6 +22,15 @@ class Tarea extends Model
 {
     return $this->belongsTo(Categoria::class);
 }
+ // relacion una tarea puede tener muchos comentarios 
+public function comentarios() {
+    return $this->hasMany(Comentario::class);
+}
 
+public function user()
+{
+    // Una tarea pertenece a un usuario (el creador)
+    return $this->belongsTo(User::class);
+}
 
 } 

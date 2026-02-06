@@ -8,101 +8,117 @@
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet" />
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     
-    
     <title>@yield('titulo', 'Gestor de Tareas')</title>
+
+    {{-- Los MetaTags --}}
+
+    <meta property="og:title" content="{{ $viewData['title'] ?? 'Mi Gestor de Tareas' }}" />
+    <meta property="og:description" content="{{ $viewData['subtitle'] ?? 'Organiza y comparte tus tareas de clase' }}" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:type" content="website" />
+
+{{-- Si estamos viendo una tarea concreta, enviamos su imagen, si no, una por defecto --}}
+@if(isset($viewData['tarea']) && $viewData['tarea']->imagen)
+    <meta property="og:image" content="{{ asset('imagenes/' . $viewData['tarea']->imagen) }}" />
+@else
+    <meta property="og:image" content="{{ asset('img/logo.png') }}" />
+@endif
 </head>
 <body>
+    {{-- BARRA DE NAVEGACIÓN --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-secondary py-4">
-        <div class="navbar-nav ms-auto">
-    <a class="nav-link active" href="{{ route('home.index') }}">Inicio</a>
-    <a class="nav-link active" href="{{ route('tareas.index') }}">Mis Tareas</a>
-    <a class="nav-link active" href="{{ route('home.about') }}">Sobre Nosotros</a>
-    <li class="nav-item">
-    <a class="nav-link" href="{{ route('tareas.favoritas') }}" style="color: pink; font-weight: bold;">
-        ❤️ Favoritas
-    </a>
-     </li>
-    {{-- aqui donde pongo el login --}}
-    <ul class="navbar-nav ms-auto">
-    @guest
-        @if (Route::has('login'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('login') }}" style="color: white; font-weight: bold;">Iniciar Sesión</a>
-            </li>
-        @endif
-
-        @if (Route::has('register'))
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('register') }}" style="color: white; font-weight: bold;">Registrarse</a>
-            </li>
-        @endif
-
-    @else
-        <li class="nav-item dropdown">
-            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="color: white;">
-                {{ Auth::user()->name }}
-            </a>
-
-            
-
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    Cerrar Sesión
+        <div class="container">
+            <div class="navbar-nav">
+                <a class="nav-link active" href="{{ route('home.index') }}">Inicio</a>
+                
+                {{-- 1. Muro Global: Para ver comentarios de todos --}}
+                <a class="nav-link" href="{{ route('tareas.index') }}">🌐 Muro Global</a>
+                
+                {{-- 2. Mis Tareas: Pista del profesor (filtro por user_id) --}}
+                <a class="nav-link" href="{{ route('tareas.index', ['filtro' => 'mias']) }}">✅ Mis Tareas</a>
+                
+                <a class="nav-link" href="{{ route('home.about') }}">Sobre Nosotros</a>
+                
+                <a class="nav-link" href="{{ route('tareas.favoritas') }}" style="color: pink; font-weight: bold;">
+                    ❤️ Favoritas
                 </a>
-
-            
-               {{-- boton para recargar puntos  --}}
-            @auth
-    <li class="nav-item">
-        <span class="nav-link text-light">
-            🪙 Puntos: {{ Auth::user()->puntos }}
-        </span>
-    </li>
-
-    @if(Auth::user()->puntos < 10)
-        <li class="nav-item ms-2">
-            <form action="{{ route('puntos.recargar') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-warning btn-sm shadow-sm animate__animated animate__pulse animate__infinite">
-                    <i class="bi bi-lightning-charge"></i> Recargar 100 pts
-                </button>
-            </form>
-        </li>
-    @endif
-@endauth
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
             </div>
-        </li>
-    @endguest
-</ul>
-</div>
+
+            <ul class="navbar-nav ms-auto">
+                @guest
+                    @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="{{ route('login') }}">Iniciar Sesión</a>
+                        </li>
+                    @endif
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="{{ route('register') }}">Registrarse</a>
+                        </li>
+                    @endif
+                @else
+                    {{-- DROPDOWN DE USUARIO --}}
+                    <li class="nav-item dropdown">
+                        <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Cerrar Sesión
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                    
+                    {{-- SECCIÓN DE PUNTOS --}}
+                    <li class="nav-item d-flex align-items-center ms-3">
+                        <span class="badge bg-dark text-light p-2 shadow-sm">
+                            🪙 Puntos: {{ Auth::user()->puntos }}
+                        </span>
+                    </li>
+
+                    @if(Auth::user()->puntos < 10)
+                        <li class="nav-item ms-2">
+                            <form action="{{ route('puntos.recargar') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-warning btn-sm fw-bold">
+                                    Recargar 100 pts
+                                </button>
+                            </form>
+                        </li>
+                    @endif
+                @endguest
+            </ul>
+        </div>
     </nav>
 
+    {{-- CABECERA DINÁMICA --}}
     <header class="masthead bg-primary text-white text-center py-4">
         <div class="container d-flex align-items-center flex-column">
             <h2>@yield('subtitulo', 'Organiza tu día con Laravel')</h2>
         </div>
     </header>
 
+    {{-- CONTENIDO PRINCIPAL --}}
     <div class="container my-4">
         @yield('contenido')
     </div>
 
-    <div class="copyright py-4 text-center text-white bg-dark">
+    {{-- FOOTER --}}
+    <footer class="copyright py-4 text-center text-white bg-dark mt-auto">
         <div class="container">
             <small>
-                Copyright - <a class="text-reset fw-bold text-decoration-none" target="_blank" href="#">
-                    Tu Nombre Aquí
-                </a>
+                Copyright © 2026 - <span class="fw-bold">Tu Nombre Aquí</span>
             </small>
         </div>
-    </div>
+    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous">
-    </script>
+    {{-- SCRIPTS (Importante: jQuery antes que Bootstrap para el scroll) --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
