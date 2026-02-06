@@ -1,0 +1,59 @@
+.bg-secondary {
+    background-color: #2c3e50 !important;
+}
+
+.copyright {
+    background-color: #1a252f;
+}
+
+.bg-primary {
+    background-color: #1abc9c !important;
+}
+
+nav {
+    font-weight: 700;
+}
+
+.img-card {
+    height: 18vw;
+    object-fit: cover;
+}
+
+/* --- ESTILOS PARA LA PÁGINA DE INICIO (ASIGNATURAS) --- */
+
+.img-asignatura {
+    width: 100%;           /* Ocupa todo el ancho de su columna */
+    height: 200px;         /* ALTURA FIJA: Todas medirán 200px de alto */
+    object-fit: cover;     /* MAGIA: Recorta la imagen para que no se deforme */
+    border-radius: 8px;    /* Bordes redondeados */
+    transition: transform 0.2s; /* Efecto suave al pasar el ratón */
+    cursor: pointer;
+}
+
+.img-asignatura:hover {
+    transform: scale(1.05); /* Pequeño zoom al pasar el ratón */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.texto-asignatura {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+/* Quitamos el subrayado también al pasar el ratón por el enlace */
+a.text-decoration-none:hover .texto-asignatura {
+    color: #0d6efd; /* Opcional: Cambia a azul al pasar el ratón */
+}
+
+.titulo-principal {
+    color: #FF6B6B; /* Por ejemplo, un color violeta */
+}
+
+/* NUEVO BOTÓN (Sustituye al azul) */
+.btn-personalizado {
+    color: #FF6B6B; /* Por ejemplo, un color violeta */
+    
+}
