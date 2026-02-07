@@ -3,7 +3,8 @@
 @section('contenido')
 <div class="container">
     <div class="card">
-        <div class="card-header">Crear Nueva Tarea</div>
+        {{-- $viewData["title"] = "Crear nueva tarea";  --}}
+       <div class="card-header">{{ $viewData["title"] }}</div>
         <div class="card-body">
             {{-- Mostramos errores de validación si los hay --}}
             @if ($errors->any())
@@ -15,13 +16,14 @@
                     </ul>
                 </div>
             @endif
-
-            <form action="{{ route('tareas.store') }}" method="POST" enctype="multipart/form-data">
+                                    {{-- EL FORMULARIO, DONDE CREO LAS TAREAS ..Y LO MANDO EN EL ACTION AL METODO STORE  --}}
+            <form action="{{ route('tareas.store') }}" method="POST" enctype="multipart/form-data"> 
                 @csrf
 
-                {{-- 1. Imagen de la tarea --}}
+                {{-- 1. Imagen de la tarea --}} 
+                {{--todo el rollo de la imagen esta en store aqui no (name:imagen type file)  --}}
                 <div class="mb-3">
-                    <label class="form-label">Imagen de la tarea</label>
+                    <label class="form-label">Imagen de la tarea</label>   
                     <input type="file" name="imagen" class="form-control">
                 </div>
 

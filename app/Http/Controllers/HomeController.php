@@ -13,8 +13,8 @@ class HomeController extends Controller
     public function index()
     {
         $viewData = [];
-        $viewData["title"] = "Página Principal - Gestor de Tareas";
-        $viewData["subtitle"] = "Elige una Asignatura"; //  PASO 2: Subtítulo coherente
+        $viewData["title"] = "Página Principal - Gestor de Tareas"; // lo que sale en la pestaña 
+        $viewData["subtitle"] = __("messages.choose_subject");; //  antes..."Elige una Asignatura"
         
         //  PASO 3: Enviamos las categorías para que el @forelse de la vista no falle
         $viewData["categorias"] = Categoria::all(); 

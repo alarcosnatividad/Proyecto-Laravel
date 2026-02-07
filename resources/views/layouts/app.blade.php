@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet" />
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('imagenes/logo.png') }}" type="image/png">
     
+
     <title>@yield('titulo', __('messages.brand'))</title>
 
     {{-- MetaTags --}}
@@ -39,7 +41,8 @@
                 <div class="navbar-nav me-auto">
                     <a class="nav-link" href="{{ route('home.index') }}">{{ __('messages.home') }}</a>
                     <a class="nav-link" href="{{ route('tareas.index') }}">🌐 {{ __('messages.global_wall') }}</a>
-                    <a class="nav-link" href="{{ route('tareas.index', ['filtro' => 'mias']) }}">✅ {{ __('messages.my_tasks') }}</a>
+                    {{--  mi ruta:/tareas?filtro=mias           sustituyo (Mis Tareas) para el traductor  --}}
+                    <a class="nav-link" href="{{ route('tareas.index', ['filtro' => 'mias']) }}">✅ {{ __('messages.my_tasks') }}</a>  
                     <a class="nav-link" href="{{ route('home.about') }}">{{ __('messages.about') }}</a>
                     <a class="nav-link fw-bold" href="{{ route('tareas.favoritas') }}" style="color: #ffc1e3;">
                         <i class="bi bi-heart-fill"></i> {{ __('messages.favorites') }}
@@ -119,6 +122,18 @@
             <h2 class="m-0">@yield('subtitulo', __('messages.default_subtitle'))</h2>
         </div>
     </header>
+    {{-- muestra las alertas --}}
+    @if(session('success'))
+    <div class="alert alert-success mt-2">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="alert alert-danger mt-2">
+        {{ session('error') }}
+    </div>
+@endif
 
     <main class="container my-5">
         @yield('contenido')

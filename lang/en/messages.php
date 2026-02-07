@@ -10,4 +10,8 @@ return [
     'register' => 'Register',
     'logout' => 'Logout',
     'points' => 'Points',
+    'default_subtitle' => 'Create your new tasks here',
+
+    'choose_subject' => 'Choose a Subject',
+    
 ];

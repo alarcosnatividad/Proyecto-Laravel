@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;// para rellenar datos de prueba ficticios
 use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model
 {
-    use HasFactory;// para rellenar datos de prueba ficticios
+    use HasFactory;
 
     protected $fillable = ['nombre', 'imagen'];
 

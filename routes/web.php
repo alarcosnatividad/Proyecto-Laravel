@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; // <--- Añadido por seguridad
-// Importamos LOS DOS controladores
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TareaController;
-use App\Http\Controllers\CategoriaController;  // añado categoria controlers
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ComentarioController;
+use App\Http\Controllers\PedidoController; // <--- IMPORTANTE: Nuevo controlador
+use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,82 +16,52 @@ use App\Http\Controllers\ComentarioController;
 |--------------------------------------------------------------------------
 */
 
-// 1. Rutas Públicas (Portada y Login)
+// 1. Rutas Públicas
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/about', [HomeController::class, 'about'])->name('home.about');
-
-Auth::routes(); // Rutas de Login/Registro
-
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// ruta lenguajes 
-Route::get('lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
+Auth::routes(); // Login/Registro
 
-
-
+// Idioma
+Route::get('lang/{locale}', [LanguageController::class, 'switchLang'])->name('lang.switch');
 
 // 2. Rutas Protegidas (Solo usuarios registrados)
-// Ponemos esto dentro de un grupo 'auth' para que nadie entre sin loguearse
 Route::middleware(['auth'])->group(function () {
 
-    // Lista de tareas
+    // --- SECCIÓN TAREAS (TareaController) ---
     Route::get('/tareas', [TareaController::class, 'index'])->name('tareas.index');
-
-    // Crear tarea
     Route::get('/tareas/crear', [TareaController::class, 'create'])->name('tareas.create');
     Route::post('/tareas/guardar', [TareaController::class, 'store'])->name('tareas.store');
-    // ruta filtrado por asignatura 
     Route::get('/tareas/categoria/{id}', [TareaController::class, 'filtrarPorCategoria'])->name('tareas.por_categoria');
-
-    Route::get('/tareas/favoritas', [TareaController::class, 'favoritas'])->name('tareas.favoritas');// tiene que ir antes que show
-
-    Route::post('/puntos/recargar', [TareaController::class, 'recargarPuntos'])->name('puntos.recargar');
-    //ruta para comentarios
-    Route::post('/tareas/{id}/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
-
-    // ruta email
-    Route::post('/tareas/{id}/compartir', [App\Http\Controllers\TareaController::class, 'enviarPorEmail'])->name('tareas.enviar.email');
-
+    Route::get('/tareas/favoritas', [TareaController::class, 'favoritas'])->name('tareas.favoritas');
     
-
-
-
-    // Ver detalle
+    // Ver, Editar, Borrar
     Route::get('/tareas/{id}', [TareaController::class, 'show'])->name('tareas.show');
-
-    // Editar tarea
     Route::get('/tareas/{id}/editar', [TareaController::class, 'edit'])->name('tareas.edit');
     Route::put('/tareas/{id}/actualizar', [TareaController::class, 'update'])->name('tareas.update');
-
-    // Borrar tarea
     Route::delete('/tareas/{id}', [TareaController::class, 'destroy'])->name('tareas.destroy');
 
-    // --- AQUÍ ESTABA EL ERROR CORREGIDO ---
-    // He quitado el "App\Http\Http..." duplicado y usado el nombre corto
+    // Interacciones (Like, Comentario, Email)
     Route::post('/tareas/{id}/like', [TareaController::class, 'toggleLike'])->name('tareas.like');
+    Route::post('/tareas/{id}/comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
+    Route::post('/tareas/{id}/compartir', [TareaController::class, 'enviarPorEmail'])->name('tareas.enviar.email');
 
-    
-    
-    
-    //------- Grupo de rutas protegidas por nuestro administrador"--------------------------------------------------
-    Route::middleware(['auth', 'admin'])->group(function () {     // ya lo he registrado previamente en midddlware
-    
-    // Ruta para ver el formulario de creación de asignaturas
-    Route::get('/categorias/crear', [CategoriaController::class, 'create'])->name('categorias.create');
-    
-    // Ruta para recibir los datos del formulario (nombre y foto)
-    Route::post('/categorias/guardar', [CategoriaController::class, 'store'])->name('categorias.store');
-    // rutas para editar y acutalizar 
-    Route::get('/categorias/{id}/editar', [CategoriaController::class, 'edit'])->name('categorias.edit');
-    Route::put('/categorias/{id}/actualizar', [CategoriaController::class, 'update'])->name('categorias.update');
-    
-    // ruta borrar categoria 
-    Route::delete('/categorias/{id}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
+    // --- SECCIÓN TRANSACCIONES (PedidoController) ---
+    // Recargar puntos y comprar acceso
+    Route::post('/puntos/recargar', [PedidoController::class, 'recargarPuntos'])->name('puntos.recargar');
+    Route::post('/tareas/{id}/comprar', [PedidoController::class, 'comprar'])->name('pedidos.comprar');
 
-    // --- NUEVA RUTA PARA EL DASHBOARD ESTADÍSTICO ---
-    Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
+    //------- Rutas de Administración --------------------------------------------------
+    Route::middleware(['admin'])->group(function () { 
+        Route::get('/categorias/crear', [CategoriaController::class, 'create'])->name('categorias.create');
+        Route::post('/categorias/guardar', [CategoriaController::class, 'store'])->name('categorias.store');
+        Route::get('/categorias/{id}/editar', [CategoriaController::class, 'edit'])->name('categorias.edit');
+        Route::put('/categorias/{id}/actualizar', [CategoriaController::class, 'update'])->name('categorias.update');
+        Route::delete('/categorias/{id}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
 
-    
-});
+        // Dashboard estadístico
+        Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.index');
+    });
 
 });

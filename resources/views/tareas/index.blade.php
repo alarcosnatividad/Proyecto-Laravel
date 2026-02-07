@@ -4,6 +4,15 @@
 @section('subtitulo', $viewData["subtitle"])
 
 @section('contenido')
+
+{{--  para mostra mensaje de exito  --}}
+
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 <div class="mb-3 d-flex justify-content-between align-items-center">
     <a href="{{ route('tareas.create') }}" class="btn btn-success shadow-sm">
         <i class="bi bi-plus-circle"></i> + Nueva Tarea

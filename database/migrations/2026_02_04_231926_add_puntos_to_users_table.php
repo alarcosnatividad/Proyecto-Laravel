@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $columna) {
+        Schema::table('users', function (Blueprint $columna) { // Shema table=>se usa para modificar
         // Añadimos puntos y damos 100 gratis al empezar
         $columna->integer('puntos')->default(100); 
     });
