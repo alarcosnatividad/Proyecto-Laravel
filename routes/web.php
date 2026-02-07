@@ -22,6 +22,12 @@ Auth::routes(); // Rutas de Login/Registro
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+// ruta lenguajes 
+Route::get('lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('lang.switch');
+
+
+
+
 // 2. Rutas Protegidas (Solo usuarios registrados)
 // Ponemos esto dentro de un grupo 'auth' para que nadie entre sin loguearse
 Route::middleware(['auth'])->group(function () {
@@ -79,6 +85,9 @@ Route::middleware(['auth'])->group(function () {
     
     // ruta borrar categoria 
     Route::delete('/categorias/{id}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
+
+    // --- NUEVA RUTA PARA EL DASHBOARD ESTADÍSTICO ---
+    Route::get('/admin/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.index');
 
     
 });

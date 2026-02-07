@@ -171,32 +171,43 @@ public function favoritas()
     }
 
     /**
-     * 8. SHOW: Detalle con carga de comentarios compartidos
+     * 8. SHOW: Detalle con SISTEMA DE PEDIDOS PERSISTENTE (MEJORA)
      */
     public function show($id)
     {
         $user = Auth::user();
+        // 1. Buscamos la tarea primero para saber quién es el dueño
+        $tarea = Tarea::with(['categoria', 'comentarios.user', 'likes', 'user'])->findOrFail($id); 
         $costePuntos = 10; 
 
-        if ($user->puntos < $costePuntos) {
-            return redirect()->route('tareas.index')
-                ->with('error', 'Saldo insuficiente. Necesitas ' . $costePuntos . ' puntos.');
+        // 2. COMPROBACIÓN CLAVE: ¿Ya ha pagado antes por esta tarea?
+        // (Esto requiere que tengas 'tareasCompradas' en el modelo User)
+        $yaPagado = $user->tareasCompradas()->where('tarea_id', $id)->exists();
+
+        // 3. Lógica de cobro: Solo cobramos si NO ha pagado y NO es su propia tarea
+        if (!$yaPagado && $tarea->user_id != $user->id) {
+            
+            if ($user->puntos < $costePuntos) {
+                return redirect()->route('tareas.index')
+                    ->with('error', 'Saldo insuficiente. Necesitas ' . $costePuntos . ' puntos.');
+            }
+
+            // Restamos puntos al usuario
+            $user->puntos -= $costePuntos;
+            $user->save();
+
+            // AQUÍ LA MAGIA: Registramos el pedido en la base de datos
+            $user->tareasCompradas()->attach($tarea->id, ['puntos_pagados' => $costePuntos]);
         }
 
-        $user->puntos -= $costePuntos;
-        $user->save();
-
-        // Carga de la tarea con todas sus relaciones para evitar errores de visualización
-        $tarea = Tarea::with(['categoria', 'comentarios.user', 'likes', 'user'])->findOrFail($id); 
-        
+        // 4. Preparamos la vista
         $viewData = [];
         $viewData["title"] = "Detalle: " . $tarea->nombre;
-        $viewData["subtitle"] = "Información compartida con la comunidad";
+        $viewData["subtitle"] = $yaPagado ? "Ya tienes acceso a esta tarea ✅" : "Información compartida";
         $viewData["tarea"] = $tarea; 
 
         return view('tareas.show')->with("viewData", $viewData);
     }
-
     /**
      * 9. RECARGAR PUNTOS
      */

@@ -32,5 +32,10 @@ public function user()
     // Una tarea pertenece a un usuario (el creador)
     return $this->belongsTo(User::class);
 }
+// un comprador puede hacer muchos pedidos 
+public function compradores()
+{
+    return $this->belongsToMany(User::class, 'pedidos');
+}
 
 } 

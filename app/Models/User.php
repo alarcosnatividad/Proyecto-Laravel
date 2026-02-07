@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tarea::class);
     }
+
+    public function tareasCompradas()
+{
+    return $this->belongsToMany(Tarea::class, 'pedidos')->withPivot('puntos_pagados')->withTimestamps();
+}
 }

@@ -1,6 +1,6 @@
 @foreach ($tareas as $tarea)
     <div class="col-md-4 col-lg-3 mb-2 tarea-item animate__animated animate__fadeInUp">
-        <div class="card {{ $tarea->completada ? 'border-success border-3' : '' }} h-100">
+        <div class="card {{ $tarea->completada ? 'border-success border-3' : '' }} h-100 shadow-sm">
             {{-- LÓGICA DE LA IMAGEN --}}
             @if($tarea->imagen)
                 <img src="{{ asset('imagenes/' . $tarea->imagen) }}" class="card-img-top img-card" alt="Imagen de {{ $tarea->nombre }}" style="height: 200px; object-fit: cover;">
@@ -9,7 +9,17 @@
             @endif
             
             <div class="card-body text-center d-flex flex-column">
-                <h5 class="card-title">{{ $tarea->nombre }}</h5>
+                <h5 class="card-title fw-bold mb-1">{{ $tarea->nombre }}</h5>
+                
+                {{-- --- AQUÍ ESTÁ EL NOMBRE DEL AUTOR --- --}}
+                <div class="mb-3">
+                    <small class="text-muted">
+                        <i class="bi bi-person-circle"></i> 
+                        {{ $tarea->user->name ?? 'Anónimo' }}
+                    </small>
+                </div>
+                {{-- ------------------------------------- --}}
+
                 <div class="mb-2">
                     @if($tarea->completada)
                         <span class="badge bg-success">¡Completada!</span>
@@ -19,7 +29,7 @@
                 </div>
 
                 {{-- BOTONES DE ACCIÓN --}}
-                <div class="mb-2">
+                <div class="mt-auto mb-2">
                     <a href="{{ route('tareas.show', ['id'=> $tarea->id]) }}" class="btn btn-primary btn-sm">Ver</a>
                     <a href="{{ route('tareas.edit', ['id'=> $tarea->id]) }}" class="btn btn-warning btn-sm">Editar</a>
                     
