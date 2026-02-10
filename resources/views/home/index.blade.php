@@ -60,7 +60,7 @@
                             </a>
                          
 
-                        {{-- ACCIONES DE ADMINISTRADOR: EDITAR Y BORRAR --}}
+                        {{-- ACCIONES DE ADMINISTRADOR: EDITAR Y BORRAR  BOTONES QUE ME LLEVAN --}}
                         @if(Auth::check() && Auth::user()->role == 'admin')
                             <div class="d-flex gap-1">
                                 {{-- BOTÓN EDITAR (Movido aquí para que funcione con cada $categoria) --}}
@@ -71,6 +71,8 @@
                                 {{-- BOTÓN BORRAR --}}
                                 <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST" class="flex-grow-1" onsubmit="return confirm('¿Seguro que quieres borrar {{ $categoria->nombre }}?');">
                                     @csrf
+                                    {{-- el navegador solo entiende get y post, le ponemos delete como un campo hidden --}}
+                                    {{-- <input type="hidden" name="_method" value="DELETE"> lo que ve el navegador  --}}
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger btn-sm w-100">
                                         <i class="bi bi-trash"></i> Borrar

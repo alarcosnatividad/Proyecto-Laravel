@@ -17,6 +17,7 @@
     <a href="{{ route('tareas.create') }}" class="btn btn-success shadow-sm">
         <i class="bi bi-plus-circle"></i> + Nueva Tarea
     </a>
+   
     
     {{-- Indicador visual de qué estamos viendo --}}
     @if(request()->query('filtro') == 'mias')

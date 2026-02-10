@@ -13,6 +13,16 @@ class Tarea extends Model
 
      // 1. Le decimos el nombre exacto de la tabla en la BBDD (la que creamos con la migración), aunque ya la sabria , mejor se explicitos 
     protected $table = 'tareas'; // en singular y plural en la bbdd
+    protected $fillable = [
+    'nombre',
+    'descripcion',
+    'coste', // <--- Añadimos esto para que Laravel pueda leerlo
+    'user_id',
+    'categoria_id',
+    'imagen'
+];
+
+    
 
 
     
@@ -41,7 +51,7 @@ public function user()
     return $this->belongsTo(User::class);
 }
 // un comprador puede hacer muchos pedidos 
-public function compradores()
+public function compradores() 
 {
     return $this->belongsToMany(User::class, 'pedidos');
 }

@@ -2,7 +2,18 @@
 
 @section('contenido')
 <div class="container py-4">
+
+    <div class="d-flex justify-content-end mb-3">
+    <a href="{{ route('admin.pedidos.index') }}" class="btn btn-outline-primary btn-sm shadow-sm">
+        <i class="bi bi-eye"></i> Ver historial de pedidos
+    </a>
+    </div>
+
+
+
     <div class="row mb-4">
+
+       
         <div class="col-12">
             <h1 class="h3 mb-3 fw-bold text-secondary">
                 <i class="bi bi-speedometer2"></i> {{ __('Dashboard Estadístico') }}
@@ -99,7 +110,7 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
 {{-- CARGA DE CHART.JS DESDE CDN --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

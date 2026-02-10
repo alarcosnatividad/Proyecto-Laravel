@@ -8,7 +8,8 @@
 <div class="card mb-3 shadow-sm">
     <div class="row g-0">
         <div class="col-md-4">
-            @if($viewData["tarea"]->imagen)
+            {{--** la imagen --}}
+            @if($viewData["tarea"]->imagen)  
                 <img src="{{ asset('imagenes/' . $viewData["tarea"]->imagen) }}" class="card-img-top img-card" alt="Imagen de la tarea" style="height: 100%; object-fit: cover;">
             @else
                 <img src="{{ asset('/img/tarea1.jpg') }}" class="card-img-top img-card" alt="Imagen por defecto" style="height: 100%; object-fit: cover;">
@@ -17,6 +18,7 @@
         <div class="col-md-8">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
+                    {{--** nombre de la tarea  --}}
                     <h5 class="card-title fw-bold">{{ $viewData["tarea"]->nombre }}</h5>
                     
                     {{-- 1. BOTÓN COMPARTIR RÁPIDO (REDES SOCIALES) --}}
@@ -24,16 +26,16 @@
                         <i class="bi bi-share"></i> Compartir
                     </button>
                 </div>
-
+                                               {{-- descripcion --}}
                 <p class="card-text mt-3">{{ $viewData["tarea"]->descripcion }}</p>
                 
                 <p class="card-text">
                     <small class="text-muted">Creada el: {{ $viewData["tarea"]->created_at->format('d-m-Y H:i') }}</small>
                 </p>
-
+                                                    {{-- boton de volver a la lista --}}
                 <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                     <a href="{{ route('tareas.index') }}" class="btn btn-outline-secondary btn-sm">Volver a la lista</a>
-
+                                                     {{-- forumulario like  --}}
                     <div class="d-flex align-items-center">
                         <form action="{{ route('tareas.like', $viewData['tarea']->id) }}" method="POST">
                             @csrf
@@ -54,6 +56,7 @@
     <div class="card-body py-3">
         <div class="row align-items-center">
             <div class="col-md-6">
+                {{-- esto es el sobre que se carga con bootstrap icons --}}
                 <h6 class="mb-1 text-info"><i class="bi bi-envelope-at-fill"></i> ¿Quieres recomendar esta tarea?</h6>
                 <p class="small text-muted mb-0">Envía la ficha técnica completa a un compañero por email.</p>
             </div>

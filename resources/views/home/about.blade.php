@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+
 @section('subtitulo', 'Mi Proyecto: Objetivos y Mejoras')
 
 @section('contenido')

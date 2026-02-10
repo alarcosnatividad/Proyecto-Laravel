@@ -11,7 +11,7 @@
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">Nueva Asignatura</h4>
                 </div>
-
+{{-- --------------------------------CREATE ES UN FORMULARIO QUE ENLAZA CON RUTA STORE Y METODO DEL CONTROLADOR A TRAVES DE ACTION --}}
                 <div class="card-body">
                     {{-- IMPORTANTE: enctype permite subir archivos binarios (fotos) --}}
                     <form action="{{ route('categorias.store') }}" method="POST" enctype="multipart/form-data">
@@ -36,6 +36,7 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('home.index') }}" class="btn btn-secondary">Cancelar</a>
+                            {{-- con submit lanza lo que lleva el formulario en el action.. que te lleva a store que guarda --}}
                             <button type="submit" class="btn btn-primary px-4">Guardar Asignatura</button>
                         </div>
                     </form>

@@ -26,7 +26,7 @@ class HomeController extends Controller
     public function about()
     {
         $viewData = [];
-        $viewData["title"] = "Sobre Nosotros - Gestor de Tareas";
+        $viewData["title"] = "Sobre  - Gestor de Tareas";
         $viewData["subtitle"] = "Acerca de este proyecto";
         $viewData["description"] = "Esta es una aplicación para gestionar tareas personales desarrollada en Laravel.";
         

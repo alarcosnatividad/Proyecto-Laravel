@@ -9,6 +9,7 @@ use App\Http\Controllers\ComentarioController;
 use App\Http\Controllers\PedidoController; // <--- IMPORTANTE: Nuevo controlador
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CarritoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,8 @@ Route::get('/about', [HomeController::class, 'about'])->name('home.about');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes(); // Login/Registro
+ //ruta mis pruebas 
+Route::get('/test', [App\Http\Controllers\CarritoController::class, 'test'])->name('test');
 
 // Idioma
 Route::get('lang/{locale}', [LanguageController::class, 'switchLang'])->name('lang.switch');
@@ -52,6 +55,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/puntos/recargar', [PedidoController::class, 'recargarPuntos'])->name('puntos.recargar');
     Route::post('/tareas/{id}/comprar', [PedidoController::class, 'comprar'])->name('pedidos.comprar');
 
+    // rutas carrito
+    
+   // Fíjate que el ->name(...) sea idéntico al que usas en la vista
+   Route::post('/carrito/add/{id}', [App\Http\Controllers\CarritoController::class, 'add'])->name('carrito.add');
+   Route::get('/carrito', [App\Http\Controllers\CarritoController::class, 'index'])->name('carrito.index');
+   Route::get('/carrito/delete', [CarritoController::class, 'delete'])->name('carrito.delete');
+   Route::post('/carrito/comprar', [App\Http\Controllers\CarritoController::class, 'comprar'])->name('carrito.comprar');
+
     //------- Rutas de Administración --------------------------------------------------
     Route::middleware(['admin'])->group(function () { 
         Route::get('/categorias/crear', [CategoriaController::class, 'create'])->name('categorias.create');
@@ -62,6 +73,9 @@ Route::middleware(['auth'])->group(function () {
 
         // Dashboard estadístico
         Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.index');
+
+        // Ruta para ver el listado de todos los pedidos
+        Route::get('/admin/pedidos', [App\Http\Controllers\AdminController::class, 'pedidos'])->name('admin.pedidos.index');
     });
 
 });

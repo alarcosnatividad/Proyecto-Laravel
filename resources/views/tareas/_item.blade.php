@@ -44,13 +44,13 @@
                         {{-- Botones normales si tiene acceso --}}
                         <a href="{{ route('tareas.show', ['id'=> $tarea->id]) }}" class="btn btn-primary btn-sm">Ver</a>
                         
-                        {{-- Solo el dueño puede editar o borrar --}}
+                        {{-- Solo el dueño puede editar o borrar  controlador index tarea metodo show--}}
                         @if($esMia)
                             <a href="{{ route('tareas.edit', ['id'=> $tarea->id]) }}" class="btn btn-warning btn-sm">Editar</a>
-                            <form action="{{ route('tareas.destroy', $tarea->id) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('tareas.destroy', $tarea->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿ESTÁS SEGURO? Esta acción borrará la tarea definitivamente.')">
                                 @csrf
                                 @method('DELETE') 
-                                <button type="submit" class="btn btn-danger btn-sm">Borrar</button>
+                                <button type="submit" class="btn btn-danger btn-sm" >Borrar</button>
                             </form>
                         @endif
                     @else
@@ -63,6 +63,27 @@
                         </form>
                     @endif
                 </div>
+
+
+
+{{-- Regla: Solo se muestra el botón si NO es del usuario y si NO está pagada --}}
+@if(!$esMia && !$yaPagada)
+    <form method="POST" action="{{ route('carrito.add', ['id' => $tarea->id]) }}" class="mt-2">
+        @csrf {{-- Seguridad obligatoria para POST --}}
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-cart-plus"></i> Añadir al carrito
+        </button>
+    </form>
+@else
+    {{-- Si es mía o ya está pagada, mostramos un mensaje o lo dejamos vacío --}}
+    <div class="alert alert-light small mt-2 text-center">
+        <i class="bi bi-info-circle"></i> 
+        {{ $esMia ? 'Tu propia tarea' : 'Tarea ya adquirida' }}
+    </div>
+@endif
+
+
+
 
                 {{-- SECCIÓN DE LIKES (MANTENIDA) --}}
                 <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
